@@ -13,10 +13,11 @@
 #define DMX_UART UART_NUM_2
 #define DMX_BAUD 250000
 
+#define DMX_TX_PIN GPIO_NUM_17
+
+
 static uint8_t dmxData[513];
 static TickType_t nextFrame = 0;
-
-#define DMX_TX_PIN GPIO_NUM_23
 
 static void dmxInit(const board_config_t *board) {
 

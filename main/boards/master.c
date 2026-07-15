@@ -9,7 +9,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#define BUTTON_PIN GPIO_NUM_18
+#define BUTTON_PIN GPIO_NUM_4
 
 
 void master_start(void) {
