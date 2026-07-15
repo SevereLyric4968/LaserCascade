@@ -23,6 +23,8 @@ void receiveCallback(
 
     espnow_send(board->nextMac, &msg);
 
+    printf("Message transmitted");
+
     status_set(STATUS_RX);
 
     laser_trigger(500);

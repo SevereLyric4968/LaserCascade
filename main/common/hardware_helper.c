@@ -38,6 +38,9 @@ void hardware_init(void) {
     config.pin_bit_mask = 1ULL << statusLedPin;
     gpio_config(&config);
 
+    config.pin_bit_mask = 1ULL << relayPin;
+    gpio_config(&config);
+
     gpio_set_level(statusLedPin,0);
     gpio_set_level(relayPin,0);
 }
@@ -64,6 +67,11 @@ void laser_trigger(uint32_t durationMs) {
     relayEndTick = xTaskGetTickCount() + pdMS_TO_TICKS(durationMs);
 
     relayActive = true;
+}
+
+bool laser_is_active(void)
+{
+    return relayActive;
 }
 
 void hardware_update(void) {
@@ -108,12 +116,14 @@ void hardware_update(void) {
 
             gpio_set_level(statusLedPin, ledState);
 
-            flashCount--;
-
             nextLedTick = now + pdMS_TO_TICKS(100);
 
             if(flashCount == 0) {
                 currentPattern = STATUS_READY;
+            }
+
+            else {
+                flashCount--;
             }
 
             break;
@@ -124,13 +134,14 @@ void hardware_update(void) {
 
             gpio_set_level(statusLedPin, ledState);
 
-            flashCount--;
-
             nextLedTick = now + pdMS_TO_TICKS(100);
 
-            if(flashCount == 0)
-            {
+            if(flashCount == 0) {
                 currentPattern = STATUS_READY;
+            }
+
+            else {
+                flashCount--;
             }
 
             break;

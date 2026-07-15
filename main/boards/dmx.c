@@ -8,6 +8,107 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "driver/uart.h"
+
+#define DMX_UART UART_NUM_2
+#define DMX_BAUD 250000
+
+static uint8_t dmxData[513];
+static TickType_t nextFrame = 0;
+
+static void dmxInit(const board_config_t *board) {
+
+    uart_config_t uartConfig = {
+        .baud_rate = DMX_BAUD,
+        .data_bits = UART_DATA_8_BITS,
+        .parity = UART_PARITY_DISABLE,
+        .stop_bits = UART_STOP_BITS_2,
+        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
+        .source_clk = UART_SCLK_DEFAULT
+    };
+
+    uart_driver_install(
+        DMX_UART,
+        1024,
+        0,
+        0,
+        NULL,
+        0
+    );
+
+    uart_param_config(
+        DMX_UART,
+        &uartConfig
+    );
+
+    uart_set_pin(
+        DMX_UART,
+        board->dmxTxPin,
+        UART_PIN_NO_CHANGE,
+        UART_PIN_NO_CHANGE,
+        UART_PIN_NO_CHANGE
+    );
+
+    memset(
+        dmxData,
+        0,
+        sizeof(dmxData)
+    );
+}
+
+static void sendDmxFrame(void) {
+    uart_wait_tx_done(
+        DMX_UART,
+        portMAX_DELAY
+    );
+
+    uart_set_baudrate(
+        DMX_UART,
+        90909
+    );
+
+    uint8_t zero = 0;
+
+    uart_write_bytes(
+        DMX_UART,
+        &zero,
+        1
+    );
+
+    uart_wait_tx_done(
+        DMX_UART,
+        portMAX_DELAY
+    );
+
+    uart_set_baudrate(
+        DMX_UART,
+        DMX_BAUD
+    );
+
+    uart_write_bytes(
+        DMX_UART,
+        (const char *)dmxData,
+        sizeof(dmxData)
+    );
+
+    uart_wait_tx_done(
+        DMX_UART,
+        portMAX_DELAY
+    );
+}
+
+static void dmxUpdate(void) {
+
+    TickType_t now = xTaskGetTickCount();
+
+    if(now >= nextFrame) {
+        sendDmxFrame();
+
+        nextFrame =
+            now +
+            pdMS_TO_TICKS(25);
+    }
+}
 
 static void receiveCallback(
     const esp_now_recv_info_t *info,
@@ -17,11 +118,13 @@ static void receiveCallback(
 {
     message_t msg;
 
-    memcpy(&msg, data, sizeof(msg));
+    memcpy(
+        &msg,
+        data,
+        sizeof(msg)
+    );
 
     printf("DMX board received: %s\n", msg.message);
-
-    const board_config_t *board = board_config_get();
 
     status_set(STATUS_RX);
 
@@ -29,21 +132,34 @@ static void receiveCallback(
 }
 
 void dmx_start(void) {
-    const board_config_t *board = board_config_get();
+
+    const board_config_t *board =
+        board_config_get();
 
     espnow_init();
 
     hardware_init();
 
-    status_set(STATUS_READY);
+    dmxInit(board);
 
     espnow_register_receive(receiveCallback);
 
-    printf("DMX receiver ready\n");
+    status_set(STATUS_READY);
 
-    while (1) {
-    hardware_update();
+    while(1) {
+        hardware_update();
 
-    vTaskDelay(pdMS_TO_TICKS(10));
+        if(!laser_is_active()) {
+            dmxData[1] = 0;
+        }
+        else{
+            dmxData[1] = 255
+        }
+
+        dmxUpdate();
+
+        vTaskDelay(
+            pdMS_TO_TICKS(1)
+        );
     }
 }

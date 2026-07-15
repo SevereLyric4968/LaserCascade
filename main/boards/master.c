@@ -37,6 +37,8 @@ void master_start(void) {
 
             status_set(STATUS_TX);
 
+            printf("Message transmitted");
+
             laser_trigger(500);
 
             if(result == ESP_OK) {
