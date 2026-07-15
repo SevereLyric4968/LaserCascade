@@ -22,6 +22,8 @@ void hardware_update(void);
 
 void laser_trigger(uint32_t durationMs);
 
+bool laser_is_active(void);
+
 void status_set(status_pattern_t pattern);
 
 #endif

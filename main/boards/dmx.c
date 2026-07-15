@@ -16,6 +16,8 @@
 static uint8_t dmxData[513];
 static TickType_t nextFrame = 0;
 
+#define DMX_TX_PIN GPIO_NUM_23
+
 static void dmxInit(const board_config_t *board) {
 
     uart_config_t uartConfig = {
@@ -43,7 +45,7 @@ static void dmxInit(const board_config_t *board) {
 
     uart_set_pin(
         DMX_UART,
-        board->dmxTxPin,
+        DMX_TX_PIN,
         UART_PIN_NO_CHANGE,
         UART_PIN_NO_CHANGE,
         UART_PIN_NO_CHANGE
@@ -153,7 +155,7 @@ void dmx_start(void) {
             dmxData[1] = 0;
         }
         else{
-            dmxData[1] = 255
+            dmxData[1] = 255;
         }
 
         dmxUpdate();

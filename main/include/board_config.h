@@ -25,7 +25,7 @@ typedef struct{
 } board_config_t;
 
 //CHANGE THIS FOR BOARD FLASHING!!!!
-#define BOARD_ID 1
+#define BOARD_ID 3
 
 const board_config_t *board_config_get(void);
 
