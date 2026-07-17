@@ -14,6 +14,9 @@ void receiveCallback(
     int len
 )
 {
+
+    const board_config_t *board = board_config_get();
+    
     printf("message received");
     message_t msg;
 
@@ -21,7 +24,7 @@ void receiveCallback(
 
     laser_trigger(500);
 
-    vTaskDelay(pdMS_TO_TICKS(board->cascadeDelayMs))
+    vTaskDelay(pdMS_TO_TICKS(board->cascadeDelayMs));
 
     espnow_send(board->nextMac, &msg);
 

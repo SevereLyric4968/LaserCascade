@@ -35,7 +35,7 @@ void master_start(void) {
 
             laser_trigger(500);
 
-            vTaskDelay(pdMS_TO_TICKS(board->cascadeDelayMs))
+            vTaskDelay(pdMS_TO_TICKS(board->cascadeDelayMs));
 
             esp_err_t result = espnow_send(board->nextMac, &msg);
 
