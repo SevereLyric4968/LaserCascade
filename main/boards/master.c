@@ -33,12 +33,9 @@ void master_start(void) {
         if(!gpio_get_level(BUTTON_PIN)) {
             printf("Button pressed\n");
 
-            laser_trigger(500);
-            printf("laser_triggered");
+            laser_trigger(board->laserOnMs);
 
-            printf("starting delay");
             vTaskDelay(pdMS_TO_TICKS(board->cascadeDelayMs));
-            printf("ending delay");
 
             esp_err_t result = espnow_send(board->nextMac, &msg);
 

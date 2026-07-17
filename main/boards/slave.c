@@ -16,13 +16,13 @@ void receiveCallback(
 {
 
     const board_config_t *board = board_config_get();
-    
+
     printf("message received");
     message_t msg;
 
     memcpy( &msg, data, sizeof(msg));
 
-    laser_trigger(500);
+    laser_trigger(board->laserOnMs);
 
     vTaskDelay(pdMS_TO_TICKS(board->cascadeDelayMs));
 

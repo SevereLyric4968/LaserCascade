@@ -11,7 +11,8 @@ static const board_config_t boardConfigs[] ={
         {
             0x20,0x9B,0xA9,0x67,0xC1,0x90
         },
-        .cascadeDelayMs = 100
+        .cascadeDelayMs = 100,
+        .laserOnMs = 500
     },
 
     {
@@ -23,7 +24,8 @@ static const board_config_t boardConfigs[] ={
         {
             0x68,0x09,0x47,0x9D,0x4A,0xB0
         },
-        .cascadeDelayMs = 100
+        .cascadeDelayMs = 100,
+        .laserOnMs = 500
         
     },
 
@@ -36,7 +38,8 @@ static const board_config_t boardConfigs[] ={
         {
             0x68,0x09,0x47,0x9D,0x63,0x90
         },
-        .cascadeDelayMs = 100
+        .cascadeDelayMs = 100,
+        .laserOnMs = 500
     },
 
     {
@@ -48,7 +51,8 @@ static const board_config_t boardConfigs[] ={
         {
             0,0,0,0,0,0
         },
-        .cascadeDelayMs = 0
+        .cascadeDelayMs = 0,
+        .laserOnMs = 3000
     }
 };
 

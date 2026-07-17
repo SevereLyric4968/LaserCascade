@@ -16,6 +16,8 @@
 #define DMX_TX_PIN GPIO_NUM_17
 #define DMX_EN_PIN GPIO_NUM_21
 
+#define SMOKE_TRIGGER_TIME_MS 1000
+#define LASER_TRIGGER_TIME_MS 3000
 
 static uint8_t dmxData[513];
 static TickType_t nextFrame = 0;
@@ -139,6 +141,8 @@ static void receiveCallback(
     int len
 )
 {
+    const board_config_t *board = board_config_get();
+
     message_t msg;
 
     memcpy(
@@ -151,10 +155,10 @@ static void receiveCallback(
 
     status_set(STATUS_RX);
 
-    laser_trigger(3000);
+    laser_trigger(board->laserOnMs);
     
     smokeTriggerActive = true;
-    smokeTriggerEndTick = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
+    smokeTriggerEndTick = xTaskGetTickCount() + pdMS_TO_TICKS(SMOKE_TRIGGER_TIME_MS);
 }
 
 void dmx_start(void) {

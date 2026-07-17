@@ -24,6 +24,9 @@ typedef struct{
     uint8_t nextMac[6];
 
     uint32_t cascadeDelayMs;
+
+    uint32_t laserOnMs;
+
 } board_config_t;
 
 //CHANGE THIS FOR BOARD FLASHING!!!!
