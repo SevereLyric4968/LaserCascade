@@ -19,15 +19,15 @@ void receiveCallback(
 
     memcpy( &msg, data, sizeof(msg));
 
-    const board_config_t *board = board_config_get();
+    laser_trigger(500);
+
+    vTaskDelay(pdMS_TO_TICKS(board->cascadeDelayMs))
 
     espnow_send(board->nextMac, &msg);
 
     printf("Message transmitted");
 
     status_set(STATUS_RX);
-
-    laser_trigger(500);
 }
 
 void slave_start(void) {

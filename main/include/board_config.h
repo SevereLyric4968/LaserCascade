@@ -22,10 +22,12 @@ typedef struct{
     gpio_num_t laserRelayPin;
 
     uint8_t nextMac[6];
+
+    uint32_t cascadeDelayMs;
 } board_config_t;
 
 //CHANGE THIS FOR BOARD FLASHING!!!!
-#define BOARD_ID 3
+#define BOARD_ID 1
 
 const board_config_t *board_config_get(void);
 

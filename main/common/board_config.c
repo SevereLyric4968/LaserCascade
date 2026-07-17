@@ -9,8 +9,9 @@ static const board_config_t boardConfigs[] ={
         .laserRelayPin = GPIO_NUM_23,
         .nextMac =
         {
-            0x20,0x9B,0xA9,0x67,0xC1,0x90
-        }
+            0x08,0xB6,0x1F,0x28,0x86,0xE8
+        },
+        .cascadeDelayMs = 100
     },
 
     {
@@ -20,19 +21,34 @@ static const board_config_t boardConfigs[] ={
         .laserRelayPin = GPIO_NUM_23,
         .nextMac =
         {
-            0x68,0x09,0x47,0x9D,0x63,0x90
-        }
+            0x68,0x09,0x47,0x9D,0x4A,0xB0
+        },
+        .cascadeDelayMs = 100
+        
     },
 
     {
         .id = 3,
+        .type = BOARD_SLAVE,
+        .statusLedPin = GPIO_NUM_19,
+        .laserRelayPin = GPIO_NUM_23,
+        .nextMac =
+        {
+            0x68,0x09,0x47,0x9D,0x63,0x90
+        },
+        .cascadeDelayMs = 100
+    },
+
+    {
+        .id = 4,
         .type = BOARD_DMX,
         .statusLedPin = GPIO_NUM_19,
         .laserRelayPin = GPIO_NUM_23,
         .nextMac =
         {
             0,0,0,0,0,0
-        }
+        },
+        .cascadeDelayMs = 0
     }
 };
 

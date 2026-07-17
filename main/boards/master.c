@@ -30,16 +30,18 @@ void master_start(void) {
     status_set(STATUS_READY);
 
     while(1) {
-        if(gpio_get_level(BUTTON_PIN)) {
+        if(!gpio_get_level(BUTTON_PIN)) {
             printf("Button pressed\n");
+
+            laser_trigger(500);
+
+            vTaskDelay(pdMS_TO_TICKS(board->cascadeDelayMs))
 
             esp_err_t result = espnow_send(board->nextMac, &msg);
 
             status_set(STATUS_TX);
 
             printf("Message transmitted");
-
-            laser_trigger(500);
 
             if(result == ESP_OK) {
                 printf("Trigger sent\n");
@@ -49,7 +51,7 @@ void master_start(void) {
             }
 
             // wait for release
-            while(gpio_get_level(BUTTON_PIN)) {
+            while(!gpio_get_level(BUTTON_PIN)) {
                 vTaskDelay(pdMS_TO_TICKS(10));
             }
         }
