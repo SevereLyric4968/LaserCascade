@@ -20,6 +20,9 @@
 static uint8_t dmxData[513];
 static TickType_t nextFrame = 0;
 
+static bool smokeTriggerActive = false;
+static TickType_t smokeTriggerEndTick = 0;
+
 static void dmxInit(const board_config_t *board) {
 
     uart_config_t uartConfig = {
@@ -58,6 +61,10 @@ static void dmxInit(const board_config_t *board) {
         0,
         sizeof(dmxData)
     );
+
+    dmxData[2] = 255;
+    dmxData[3] = 83;
+    dmxData[9] = 75;
     
     gpio_config_t enConfig = {
     .pin_bit_mask = (1ULL << DMX_EN_PIN),
@@ -144,7 +151,10 @@ static void receiveCallback(
 
     status_set(STATUS_RX);
 
-    laser_trigger(500);
+    laser_trigger(3000);
+    
+    smokeTriggerActive = true;
+    smokeTriggerEndTick = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
 }
 
 void dmx_start(void) {
@@ -165,17 +175,22 @@ void dmx_start(void) {
     while(1) {
         hardware_update();
 
-        if(!laser_is_active()) {
-            dmxData[1] = 0;
-        }
-        else{
+        TickType_t now = xTaskGetTickCount();
+
+        if(smokeTriggerActive) {
             dmxData[1] = 255;
+
+            if(now >= smokeTriggerEndTick) {
+                dmxData[1] = 0;
+                smokeTriggerActive = false;
+            }
+        }
+        else {
+            dmxData[1] = 0;
         }
 
         dmxUpdate();
 
-        vTaskDelay(
-            pdMS_TO_TICKS(1)
-        );
+        vTaskDelay(pdMS_TO_TICKS(1));
     }
 }
