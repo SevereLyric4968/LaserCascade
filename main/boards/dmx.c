@@ -14,6 +14,7 @@
 #define DMX_BAUD 250000
 
 #define DMX_TX_PIN GPIO_NUM_17
+#define DMX_EN_PIN GPIO_NUM_21
 
 
 static uint8_t dmxData[513];
@@ -57,6 +58,18 @@ static void dmxInit(const board_config_t *board) {
         0,
         sizeof(dmxData)
     );
+    
+    gpio_config_t enConfig = {
+    .pin_bit_mask = (1ULL << DMX_EN_PIN),
+    .mode = GPIO_MODE_OUTPUT,
+    .pull_up_en = GPIO_PULLUP_DISABLE,
+    .pull_down_en = GPIO_PULLDOWN_DISABLE,
+    .intr_type = GPIO_INTR_DISABLE
+    };
+
+    gpio_config(&enConfig);
+
+    gpio_set_level(DMX_EN_PIN, 1);
 }
 
 static void sendDmxFrame(void) {
