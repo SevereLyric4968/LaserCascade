@@ -9,7 +9,7 @@ static const board_config_t boardConfigs[] ={
         .laserRelayPin = GPIO_NUM_23,
         .nextMac =
         {
-            0x08,0xB6,0x1F,0x28,0x86,0xE8
+            0x20,0x9B,0xA9,0x67,0xC1,0x90
         },
         .cascadeDelayMs = 100
     },

@@ -34,8 +34,11 @@ void master_start(void) {
             printf("Button pressed\n");
 
             laser_trigger(500);
+            printf("laser_triggered");
 
+            printf("starting delay");
             vTaskDelay(pdMS_TO_TICKS(board->cascadeDelayMs));
+            printf("ending delay");
 
             esp_err_t result = espnow_send(board->nextMac, &msg);
 
