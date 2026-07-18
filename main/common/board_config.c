@@ -52,7 +52,7 @@ static const board_config_t boardConfigs[] ={
             0,0,0,0,0,0
         },
         .cascadeDelayMs = 0,
-        .laserOnMs = 3000
+        .laserOnMs = 30000
     }
 };
 

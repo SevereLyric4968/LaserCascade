@@ -16,8 +16,7 @@
 #define DMX_TX_PIN GPIO_NUM_17
 #define DMX_EN_PIN GPIO_NUM_21
 
-#define SMOKE_TRIGGER_TIME_MS 1000
-#define LASER_TRIGGER_TIME_MS 3000
+#define SMOKE_TRIGGER_TIME_MS 10000
 
 static uint8_t dmxData[513];
 static TickType_t nextFrame = 0;
@@ -171,6 +170,14 @@ void dmx_start(void) {
     hardware_init();
 
     dmxInit(board);
+
+    laser_trigger(board->laserOnMs);
+
+    while(laser_is_active())
+    {
+        hardware_update();
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
 
     espnow_register_receive(receiveCallback);
 
